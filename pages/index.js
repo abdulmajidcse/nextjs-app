@@ -1,12 +1,20 @@
+import { useEffect, useState } from "react"
 import Meta from '../components/Meta'
 import Link from 'next/link'
 import { Alert } from 'react-bootstrap'
+import Loading from '../components/Loading'
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+      setLoading(false);
+  }, []);
 
   return (
     <>
       <Meta title="Home" />
+      <Loading show={loading} />
       <div className="container my-5">
         <Alert variant="success">
           <Alert.Heading>Welcome to {process.env.APP_NAME}</Alert.Heading>
