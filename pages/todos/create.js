@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { toast } from 'react-toastify'
 
 export default function TodoCreate() {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [todo, setTodo] = useState({
     title: '',
@@ -74,8 +74,8 @@ export default function TodoCreate() {
             <div className="container my-3">
                 <Card>
                     <Card.Header>
-                        <span className="h4 me-4">Create Todo</span>
-                        <Link href="/todos"><a className="btn btn-sm btn-primary">Todo List</a></Link>
+                      <span className="h4 me-4">Create Todo</span>
+                      <Link href="/todos"><a className="btn btn-sm btn-primary">Todo List</a></Link>
                     </Card.Header>
 
                     <Card.Body>

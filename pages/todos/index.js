@@ -14,7 +14,7 @@ export default function Todos({ data }) {
         if (data.data) {
             setTodos(data.data)
         } else {
-            console.log(data.errors)
+            toast.error("Something went wrong!")
         }
         setLoading(false);
     }, [])
@@ -78,7 +78,7 @@ export default function Todos({ data }) {
                                         <td>{todo.note}</td>
                                         <td>{todo.comment}</td>
                                         <td>
-                                            <Link href="/todos"><a className="btn btn-sm btn-primary me-1">Edit</a></Link>
+                                            <Link href={`/todos/${todo.id}/edit`}><a className="btn btn-sm btn-primary me-1">Edit</a></Link>
                                             {delConfirm != todo.id && <a className="btn btn-sm btn-danger" onClick={() => setDelConfirm(todo.id)}>Delete</a>}
                                             {delConfirm == todo.id && <a className="btn btn-sm btn-secondary me-1" onClick={() => deleteTodo(todo.id)}>Sure?</a>}
                                             {delConfirm == todo.id && <a className="btn btn-sm btn-danger" onClick={() => setDelConfirm('')}>No</a>}
@@ -106,4 +106,4 @@ export async function getServerSideProps() {
     return {
       props: { data }
     }
-  }
+}
