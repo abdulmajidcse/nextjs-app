@@ -1,7 +1,11 @@
 import { Container, Navbar, Nav } from 'react-bootstrap'
 import Link from 'next/link'
+import { ThemeContext } from '../contexts/themeContext'
+import { useContext } from 'react';
 
 export default function Header() {
+    const { theme, changeTheme } = useContext(ThemeContext)
+
     return (
         <div className="bg-light">
             <Container>
@@ -12,6 +16,9 @@ export default function Header() {
                         <Nav className="ms-auto">
                             <Link href="/"><a className="nav-link">Home</a></Link>
                             <Link href="/todos"><a className="nav-link">Todo List</a></Link>
+                            <span style={{cursor: 'pointer'}} className="nav-link" onClick={changeTheme}>
+                                {theme === 'light' ? 'Dark Theme' : 'Light Theme'}
+                            </span>
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
