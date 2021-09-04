@@ -3,10 +3,12 @@ import Meta from "../../components/Meta"
 import Loading from '../../components/Loading'
 import { Card, Table } from "react-bootstrap"
 import Link from 'next/link'
+import { toast } from 'react-toastify'
 
 export default function Todos({ data }) {
     const [loading, setLoading] = useState(true)
     const [todos, setTodos] = useState([])
+    const [delConfirm, setDelConfirm] = useState('')
 
     useEffect(() => {
         if (data.data) {
@@ -16,6 +18,35 @@ export default function Todos({ data }) {
         }
         setLoading(false);
     }, [])
+
+    const deleteTodo = (todoId) => {
+        setLoading(true)
+        setDelConfirm('')
+
+        let data = new FormData();
+        data.append('_method', 'delete')
+
+        // request handle with javascrpt fetch
+        fetch(`${process.env.API_URL}/todos/${todoId}`, {
+            method: 'post',
+            body: data,
+        })
+        .then(response => response.json())
+        .then(response => {
+            if (response.errors) {
+                toast.error("Something went wrong!")
+            } else {
+                toast.success("Todo Deleted!")
+                let todosNewList = todos.filter(todo => todo.id !== todoId)
+                setTodos(todosNewList)
+            }
+            setLoading(false);
+        })
+        .catch(() => {
+            toast.error("Something went wrong!")
+            setLoading(false)
+        })
+    }
 
     return (
         <>
@@ -48,7 +79,9 @@ export default function Todos({ data }) {
                                         <td>{todo.comment}</td>
                                         <td>
                                             <Link href="/todos"><a className="btn btn-sm btn-primary me-1">Edit</a></Link>
-                                            <Link href="/todos"><a className="btn btn-sm btn-danger">Delete</a></Link>
+                                            {delConfirm != todo.id && <a className="btn btn-sm btn-danger" onClick={() => setDelConfirm(todo.id)}>Delete</a>}
+                                            {delConfirm == todo.id && <a className="btn btn-sm btn-secondary me-1" onClick={() => deleteTodo(todo.id)}>Sure?</a>}
+                                            {delConfirm == todo.id && <a className="btn btn-sm btn-danger" onClick={() => setDelConfirm('')}>No</a>}
                                         </td>
                                     </tr>
                                 )}
