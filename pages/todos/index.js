@@ -4,12 +4,18 @@ import Loading from '../../components/Loading'
 import { Card, Table } from "react-bootstrap"
 import Link from 'next/link'
 
-export default function Todos() {
-    const [loading, setLoading] = useState(true);
+export default function Todos({ data }) {
+    const [loading, setLoading] = useState(true)
+    const [todos, setTodos] = useState([])
 
     useEffect(() => {
+        if (data.data) {
+            setTodos(data.data)
+        } else {
+            console.log(data.errors)
+        }
         setLoading(false);
-    }, []);
+    }, [])
 
     return (
         <>
@@ -34,16 +40,18 @@ export default function Todos() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Note Title</td>
-                                    <td>Note Details</td>
-                                    <td>Comments...</td>
-                                    <td>
-                                        <Link href="/todos"><a className="btn btn-sm btn-primary me-1">Edit</a></Link>
-                                        <Link href="/todos"><a className="btn btn-sm btn-danger">Delete</a></Link>
-                                    </td>
-                                </tr>
+                                {todos.map((todo, index) => 
+                                    <tr key={todo.id}>
+                                        <td>{++index}</td>
+                                        <td>{todo.title}</td>
+                                        <td>{todo.note}</td>
+                                        <td>{todo.comment}</td>
+                                        <td>
+                                            <Link href="/todos"><a className="btn btn-sm btn-primary me-1">Edit</a></Link>
+                                            <Link href="/todos"><a className="btn btn-sm btn-danger">Delete</a></Link>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </Table>   
                     </Card.Body>
@@ -52,3 +60,17 @@ export default function Todos() {
         </>
     )
 }
+
+
+export async function getServerSideProps() {
+    // get todos with js fetch
+    const res = await fetch(`${process.env.API_URL}/todos`, {
+        method: 'get',
+    })
+
+    const data = await res.json()
+    
+    return {
+      props: { data }
+    }
+  }
