@@ -25,7 +25,7 @@ export default function Todos({ data }) {
                 <Card>
                     <Card.Header>
                         <span className="h4 me-4">Todo List</span>
-                        <Link href="/todos"><a className="btn btn-sm btn-primary">Add New</a></Link>
+                        <Link href="/todos/create"><a className="btn btn-sm btn-primary">Add New</a></Link>
                     </Card.Header>
 
                     <Card.Body>
