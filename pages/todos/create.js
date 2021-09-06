@@ -61,10 +61,12 @@ export default function TodoCreate() {
                 }
                 setLoading(false);
             })
-            .catch((error) => {
+            .catch(() => {
                 toast.error('Something went wrong!');
                 setLoading(false);
             });
+
+        return true;
     };
 
     return (

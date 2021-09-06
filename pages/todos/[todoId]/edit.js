@@ -70,6 +70,8 @@ export default function TodoEdit({ data, todoId }) {
                 toast.success('Something went wrong!');
                 setLoading(false);
             });
+
+        return true;
     };
 
     return (
