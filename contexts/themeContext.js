@@ -1,6 +1,6 @@
-import React, { useState } from "react"
+import React, { useState } from 'react';
 
-const defaultTheme = 'light'
+const defaultTheme = 'light';
 
 export const ThemeContext = React.createContext({
     theme: defaultTheme,
@@ -8,19 +8,15 @@ export const ThemeContext = React.createContext({
 });
 
 export const ThemeContextProvider = ({ children }) => {
-    const [theme, setTheme] = useState(defaultTheme)
+    const [theme, setTheme] = useState(defaultTheme);
 
     const changeTheme = () => {
         if (theme === 'light') {
-            setTheme('dark')
+            setTheme('dark');
         } else {
-            setTheme('light')
+            setTheme('light');
         }
-    }
+    };
 
-    return (
-        <ThemeContext.Provider value={{ theme, changeTheme }}>
-            {children}
-        </ThemeContext.Provider>
-    )
-}
+    return <ThemeContext.Provider value={{ theme, changeTheme }}>{children}</ThemeContext.Provider>;
+};
