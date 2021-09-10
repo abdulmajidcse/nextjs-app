@@ -36,15 +36,24 @@ export default function TodoCreate() {
         setLoading(true);
         setErrors({});
 
-        const data = new FormData();
-        data.append('title', todo.title);
-        data.append('note', todo.note);
-        data.append('comment', todo.comment);
+        // const data = new FormData();
+        // data.append('title', todo.title);
+        // data.append('note', todo.note);
+        // data.append('comment', todo.comment);
+
+        const data = JSON.stringify({
+            title: todo.title,
+            note: todo.note,
+            comment: todo.comment,
+        });
 
         // request handle with javascrpt fetch
         fetch(`${process.env.API_URL}/todos`, {
             method: 'post',
             body: data,
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
         })
             .then((response) => response.json())
             .then((response) => {
