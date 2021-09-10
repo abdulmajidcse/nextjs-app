@@ -46,16 +46,19 @@ export default function TodoEdit({ data, todoId }) {
         setErrors({});
 
         // eslint-disable-next-line no-shadow
-        const data = new FormData();
-        data.append('title', todo.title);
-        data.append('note', todo.note);
-        data.append('comment', todo.comment);
-        data.append('_method', 'put');
+        const data = JSON.stringify({
+            title: todo.title,
+            note: todo.note,
+            comment: todo.comment,
+        });
 
         // request handle with javascrpt fetch
         fetch(`${process.env.API_URL}/todos/${todoId}`, {
-            method: 'post',
+            method: 'put',
             body: data,
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
         })
             .then((response) => response.json())
             .then((response) => {

@@ -36,11 +36,6 @@ export default function TodoCreate() {
         setLoading(true);
         setErrors({});
 
-        // const data = new FormData();
-        // data.append('title', todo.title);
-        // data.append('note', todo.note);
-        // data.append('comment', todo.comment);
-
         const data = JSON.stringify({
             title: todo.title,
             note: todo.note,
