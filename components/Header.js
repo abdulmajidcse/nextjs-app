@@ -2,12 +2,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Link from 'next/link';
-import { useContext } from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import { ThemeContext } from '../contexts/themeContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleTheme } from '../redux/themeSlice';
 
 export default function Header() {
-    const { theme, changeTheme } = useContext(ThemeContext);
+    const theme = useSelector((state) => state.theme.value);
+    const dispatch = useDispatch();
 
     return (
         <div className={theme === 'light' ? 'bg-light' : 'bg-dark'}>
@@ -48,7 +49,7 @@ export default function Header() {
                                 className={`nav-link ${
                                     theme === 'light' ? 'text-dark' : 'text-light'
                                 }`}
-                                onClick={changeTheme}
+                                onClick={() => dispatch(toggleTheme())}
                             >
                                 {theme === 'light' ? (
                                     <i className="bi bi-moon-fill" />

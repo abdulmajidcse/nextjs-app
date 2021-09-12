@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import { Container } from 'react-bootstrap';
-import { ThemeContext } from '../contexts/themeContext';
+import { useSelector } from 'react-redux';
 
 export default function Footer() {
-    const { theme } = useContext(ThemeContext);
+    const theme = useSelector((state) => state.theme.value);
 
     return (
         <div className={`p-3 ${theme === 'light' ? 'bg-light' : 'bg-dark'}`}>

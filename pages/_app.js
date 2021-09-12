@@ -2,12 +2,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
-import { ThemeContextProvider } from '../contexts/themeContext';
+import store from '../redux/store';
 
 function MyApp({ Component, pageProps }) {
     const [loading, setLoading] = useState(true);
@@ -37,13 +38,13 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <>
-            <ThemeContextProvider>
+            <Provider store={store}>
                 <Header />
                 <Loading show={loading} />
                 <ToastContainer />
                 <Component {...pageProps} />
                 <Footer />
-            </ThemeContextProvider>
+            </Provider>
         </>
     );
 }
