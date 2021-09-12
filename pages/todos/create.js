@@ -1,77 +1,66 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import * as Yup from 'yup';
 import Loading from '../../components/Loading';
 import Meta from '../../components/Meta';
 
 export default function TodoCreate() {
     const [loading, setLoading] = useState(true);
-    const [errors, setErrors] = useState({});
-    const [todo, setTodo] = useState({
-        title: '',
-        note: '',
-        comment: '',
-    });
 
     useEffect(() => {
         setLoading(false);
     }, []);
 
-    const handleInput = (e) => {
-        const inputName = e.target.name;
-        const inputValue = e.target.value;
-        setTodo({
-            ...todo,
-            [inputName]: inputValue,
-        });
-    };
+    const formik = useFormik({
+        initialValues: {
+            title: '',
+            note: '',
+            comment: '',
+        },
+        validationSchema: Yup.object({
+            title: Yup.string().required('Required'),
+            note: Yup.string().required('Required'),
+            comment: Yup.string().nullable(),
+        }),
+        onSubmit: (values, { setSubmitting, setErrors, resetForm }) => {
+            setLoading(true);
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-
-        if (loading) return true;
-
-        setLoading(true);
-        setErrors({});
-
-        const data = JSON.stringify({
-            title: todo.title,
-            note: todo.note,
-            comment: todo.comment,
-        });
-
-        // request handle with javascrpt fetch
-        fetch(`${process.env.API_URL}/todos`, {
-            method: 'post',
-            body: data,
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.errors) {
-                    setErrors(response.errors);
-                } else {
-                    toast.success('Todo Created!');
-                    setLoading(false);
-                    setTodo({
-                        title: '',
-                        note: '',
-                        comment: '',
-                    });
-                }
-                setLoading(false);
-            })
-            .catch(() => {
-                toast.error('Something went wrong!');
-                setLoading(false);
+            const data = JSON.stringify({
+                title: values.title,
+                note: values.note,
+                comment: values.comment,
             });
 
-        return true;
-    };
+            // request handle with javascrpt fetch
+            fetch(`${process.env.API_URL}/todos`, {
+                method: 'post',
+                body: data,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.errors) {
+                        setErrors(response.errors);
+                    } else {
+                        toast.success('Todo Created!');
+                        resetForm();
+                    }
+                    setLoading(false);
+                    setSubmitting(false);
+                })
+                .catch(() => {
+                    toast.error('Something went wrong!');
+                    setLoading(false);
+                    setSubmitting(false);
+                });
+        },
+    });
 
     return (
         <>
@@ -87,17 +76,19 @@ export default function TodoCreate() {
                     </Card.Header>
 
                     <Card.Body>
-                        <Form onSubmit={handleFormSubmit}>
+                        <Form onSubmit={formik.handleSubmit}>
                             <Form.Group className="mb-3" controlId="title">
                                 <Form.Label>Title</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="title"
-                                    value={todo.title}
-                                    onChange={handleInput}
+                                    value={formik.values.title}
+                                    onChange={formik.handleChange}
                                 />
-                                {errors.title && (
-                                    <Form.Text className="text-danger">{errors.title}</Form.Text>
+                                {formik.errors.title && (
+                                    <Form.Text className="text-danger">
+                                        {formik.errors.title}
+                                    </Form.Text>
                                 )}
                             </Form.Group>
 
@@ -107,11 +98,13 @@ export default function TodoCreate() {
                                     as="textarea"
                                     rows={3}
                                     name="note"
-                                    value={todo.note}
-                                    onChange={handleInput}
+                                    value={formik.values.note}
+                                    onChange={formik.handleChange}
                                 />
-                                {errors.note && (
-                                    <Form.Text className="text-danger">{errors.note}</Form.Text>
+                                {formik.errors.note && (
+                                    <Form.Text className="text-danger">
+                                        {formik.errors.note}
+                                    </Form.Text>
                                 )}
                             </Form.Group>
 
@@ -120,15 +113,17 @@ export default function TodoCreate() {
                                 <Form.Control
                                     type="text"
                                     name="comment"
-                                    value={todo.comment}
-                                    onChange={handleInput}
+                                    value={formik.values.comment}
+                                    onChange={formik.handleChange}
                                 />
-                                {errors.comment && (
-                                    <Form.Text className="text-danger">{errors.comment}</Form.Text>
+                                {formik.errors.comment && (
+                                    <Form.Text className="text-danger">
+                                        {formik.errors.comment}
+                                    </Form.Text>
                                 )}
                             </Form.Group>
 
-                            <Button variant="primary" type="submit">
+                            <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
                                 Save
                             </Button>
                         </Form>
